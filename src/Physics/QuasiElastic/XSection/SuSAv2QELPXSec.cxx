@@ -52,6 +52,7 @@ double SuSAv2QELPXSec::XSec(const Interaction* interaction,
   int tensor_pdg = target_pdg;
   int A_request = pdg::IonPdgCodeToA(target_pdg);
   bool need_to_scale = false;
+  int modelConfig = 1; // 0 is HF, 1 is CRPA, 2 will be SuSA (TBD)
 
   HadronTensorType_t tensor_type = kHT_Undefined;
   if ( pdg::IsNeutrino(probe_pdg) || pdg::IsAntiNeutrino(probe_pdg) ) {
@@ -108,16 +109,11 @@ double SuSAv2QELPXSec::XSec(const Interaction* interaction,
   // The SuSAv2-1p1h hadron tensors are defined using the same conventions
   // as the Valencia MEC (and SuSAv2-MEC) model, so we can use the same sort of tensor
   // object to describe them.
-  const LabFrameHadronTensorI* tensor
-    = dynamic_cast<const LabFrameHadronTensorI*>( fHadronTensorModel->GetTensor(tensor_pdg,
-    tensor_type) );
+  // const LabFrameHadronTensorI* tensor
+  //   = dynamic_cast<const LabFrameHadronTensorI*>( fHadronTensorModel->GetTensor(tensor_pdg,
+  //   tensor_type) );
 
-  // If retrieving the tensor failed, complain and return zero
-  if ( !tensor ) {
-    LOG("SuSAv2QE", pWARN) << "Failed to load a hadronic tensor for the"
-      " nuclide " << tensor_pdg;
-    return 0.;
-  }
+
 
   // Check that the input kinematical point is within the range
   // in which hadron tensors are known (for chosen target)
@@ -127,6 +123,7 @@ double SuSAv2QELPXSec::XSec(const Interaction* interaction,
   double ml    = interaction->FSPrimLepton()->Mass();
   double Q0    = 0.;
   double Q3    = 0.;
+
 
   // SD: The Q-Value essentially corrects q0 to account for nuclear
   // binding energy in the Valencia model but this effect is already
@@ -139,6 +136,65 @@ double SuSAv2QELPXSec::XSec(const Interaction* interaction,
   if( fQvalueShifter ) Q_value += Q_value * fQvalueShifter -> Shift( interaction->InitState().Tgt() ) ;
 
   genie::utils::mec::Getq0q3FromTlCostl(Tl, costl, Ev, ml, Q0, Q3);
+
+
+  if (Q0<0.060 && pdg::IsNeutrino(probe_pdg) && modelConfig==1 ) {
+    tensor_type = kHT_QE_CRPA_Low;
+  }
+  else if (Q0<0.150 && pdg::IsNeutrino(probe_pdg) && modelConfig==1 ){
+    tensor_type = kHT_QE_CRPA_Medium;
+  }
+  else if (Q0>=0.150 && pdg::IsNeutrino(probe_pdg) && modelConfig==1 ){
+    tensor_type = kHT_QE_CRPA_High;
+  }
+  else if (pdg::IsAntiNeutrino(probe_pdg) && Q0<0.060 && modelConfig==1 ) {
+    tensor_type = kHT_QE_CRPA_antiMuNu_Low;
+  }
+  else if (pdg::IsAntiNeutrino(probe_pdg) && Q0<0.150 && modelConfig==1 ) {
+    tensor_type = kHT_QE_CRPA_antiMuNu_Medium;
+  }
+  else if (pdg::IsAntiNeutrino(probe_pdg) && Q0>=0.150 && modelConfig==1 ) {
+    tensor_type = kHT_QE_CRPA_antiMuNu_High;
+  }
+
+    else if (pdg::IsNeutrino(probe_pdg) && Q0<0.060 && modelConfig==0 ) {
+    tensor_type = kHT_QE_HF_Low;
+  }
+  else if (pdg::IsNeutrino(probe_pdg) && Q0<0.150 && modelConfig==0 ) {
+    tensor_type = kHT_QE_HF_Medium;
+  }
+  else if (pdg::IsNeutrino(probe_pdg) && Q0>=0.150 && modelConfig==0 ) {
+    tensor_type = kHT_QE_HF_High;
+  }
+
+  // tensor_type = kPdgTgtC12;
+  if(modelConfig==1 && (tensor_type == kHT_QE_CRPA_Low || tensor_type == kHT_QE_CRPA_Medium || tensor_type == kHT_QE_CRPA_High) && (A_request >= 15 && A_request < 22) ) tensor_pdg = kPdgTgtO16;
+
+  if( modelConfig==1 && (tensor_type == kHT_QE_CRPA_Low || tensor_type == kHT_QE_CRPA_Medium || tensor_type == kHT_QE_CRPA_High) && (A_request >= 22 && A_request < 56) ) tensor_pdg = 1000180400;
+
+  if( modelConfig==1 && (tensor_type == kHT_QE_CRPA_antiMuNu_Low || tensor_type == kHT_QE_CRPA_antiMuNu_Medium || tensor_type == kHT_QE_CRPA_antiMuNu_High) && (A_request >= 15 && A_request < 22) ) tensor_pdg = kPdgTgtO16;
+
+  if( modelConfig==1 && (tensor_type == kHT_QE_CRPA_antiMuNu_Low || tensor_type == kHT_QE_CRPA_antiMuNu_Medium || tensor_type == kHT_QE_CRPA_antiMuNu_High) && (A_request >= 22 && A_request < 56) ) tensor_pdg = 1000180400;
+
+  if( modelConfig==0 && (tensor_type == kHT_QE_HF_Low || tensor_type == kHT_QE_HF_Medium || tensor_type == kHT_QE_HF_High) && (A_request >= 15 && A_request < 22) ) tensor_pdg = kPdgTgtO16;
+
+  if( modelConfig==0 && (tensor_type == kHT_QE_HF_Low || tensor_type == kHT_QE_HF_Medium || tensor_type == kHT_QE_HF_High) && (A_request >= 22 && A_request < 56) ) tensor_pdg = 1000180400;
+  // std::cout << "tensor type is " << tensor_type << std::endl;
+  // std::cout << "target pdg code is " << target_pdg << std::endl;
+  // std::cout << "probe pdg code is " << probe_pdg << std::endl;
+
+
+
+  const LabFrameHadronTensorI* tensor
+  = dynamic_cast<const LabFrameHadronTensorI*>( fHadronTensorModel->GetTensor(tensor_pdg,
+  tensor_type) );
+
+    // If retrieving the tensor failed, complain and return zero
+  if ( !tensor ) {
+    LOG("SuSAv2QE", pWARN) << "Failed to load a hadronic tensor for the"
+      " nuclide " << tensor_pdg;
+    return 0.;
+  }
 
   double Q0min = tensor->q0Min();
   double Q0max = tensor->q0Max();
@@ -172,8 +228,8 @@ double SuSAv2QELPXSec::XSec(const Interaction* interaction,
   // Neutron, proton, and mass numbers of the target
   const Target& tgt = interaction->InitState().Tgt();
   if ( proc_info.IsWeakCC() ) {
-    if ( pdg::IsNeutrino(probe_pdg) ) xsec *= tgt.N();
-    else if ( pdg::IsAntiNeutrino(probe_pdg) ) xsec *= tgt.Z();
+    if ( pdg::IsNeutrino(probe_pdg) ) xsec *= 1; //*= tgt.N();  
+    else if ( pdg::IsAntiNeutrino(probe_pdg) ) xsec *= 1; //*= tgt.Z();
     else {
       // We should never get here if ValidProcess() is working correctly
       LOG("SuSAv2QE", pERROR) << "Unrecognized probe " << probe_pdg
@@ -312,6 +368,75 @@ void SuSAv2QELPXSec::LoadConfig(void)
   this->GetParam( "RFG-NucRemovalE@Pdg=1000501190", fEbSn );
   this->GetParam( "RFG-NucRemovalE@Pdg=1000791970", fEbAu );
   this->GetParam( "RFG-NucRemovalE@Pdg=1000822080", fEbPb );
+
+
+// Create variables
+  double pmu = 0.000;
+  double m_probe = 0.0;
+  double Ml = PDGLibrary::Instance()->Find(13)->Mass();
+
+  double Q_value = 0.0;
+  double xsec_r = 0;
+
+  double w00 = 0;
+  double w03 = 0;
+  double w11 = 0;
+  double w12 = 0;
+  double w33 = 0;
+
+  // Hard coded point to assess: 
+  int nu_pdg = 14;
+
+// Set Enu
+  double Enu = 1.0;
+// Specify w and q
+  double myq = 0.28119130473;
+  double myw = 0.0599000015;
+// obtain Tl and cos 
+  double Tl = 0.0;
+  double costhl = 0.0;
+  genie::utils::mec::GetTlCostlFromq0q3(myw, myq, Enu, Ml, Tl, costhl);
+
+
+  //double Tl = sqrt(pmu*pmu + Ml*Ml) - Ml;
+  //genie::utils::mec::Getq0q3FromTlCostl(Tl, costhl, Enu, Ml, myw, myq);
+
+  // chose correct data table
+  int tensor_pdg = kPdgTgtC12;
+
+  HadronTensorType_t tensor_type;
+  if (myw<0.060) {
+    tensor_type = kHT_QE_CRPA_Low;
+  }
+  else if (myw<0.150){
+    tensor_type = kHT_QE_CRPA_Medium;
+  }
+  else{
+    tensor_type = kHT_QE_CRPA_High;
+  }
+
+  const LabFrameHadronTensorI* tensor = dynamic_cast<const LabFrameHadronTensorI*>( fHadronTensorModel->GetTensor(tensor_pdg, tensor_type) );
+
+
+  xsec_r = tensor->dSigma_dT_dCosTheta_rosenbluth(nu_pdg, Enu, m_probe, Tl, costhl, Ml, Q_value);
+  xsec_r = xsec_r*1E+38/units::cm2;  
+  w00 = (tensor->tt(myw,myq)).real();
+  w03 = (tensor->tz(myw,myq)).real();
+  w11 = (tensor->xx(myw,myq)).real();
+  w12 = (tensor->xy(myw,myq)).imag();
+  w33 = (tensor->zz(myw,myq)).real();
+
+  std::cout << "\n" << std::endl;
+  std::cout << "Calculate some fixed point xsec: " << std::endl;
+  std::cout << "w = " << myw << ", q = " << myq << ", costhl = " << costhl << std::endl;
+  std::cout << "Enu, pmu, Tl, costhl, w, q: xsec" << std::endl;
+  std::cout << Enu << ", " << pmu << ", " << Tl << ", " << costhl << ", " << myw << ", " << myq << ": " << xsec_r << std::endl;
+  
+  std::cout << "       HTele: w00, w03, w11, w12, w33" << std::endl;
+  std::cout << "       HTele: " << w00 << ", " << w03 << ", " << w11 << ", " << w12 << ", " << w33 <<  std::endl;
+
+  std::cout << "Wait 5 seconds before continuing ..." << std::endl;
+  sleep(5);
 
   // Read optional QvalueShifter:
   // Read optional QvalueShifter:                                                                                   

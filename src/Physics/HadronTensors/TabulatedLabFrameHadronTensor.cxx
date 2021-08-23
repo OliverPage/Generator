@@ -62,12 +62,12 @@ genie::TabulatedLabFrameHadronTensor::TabulatedLabFrameHadronTensor(
 
   set_pdg( genie::pdg::IonPdgCode(A, Z) );
 
-  std::cout<< "TabulatedLabFrameHadronTensor: reading hadron tensor table" << std::endl;
-  std::cout<< "table_file_name:  " << table_file_name << std::endl;
-  std::cout<< "Z:                " << Z << std::endl;
-  std::cout<< "A:                " << A << std::endl;
-  std::cout<< "num_q0:           " << num_q0 << std::endl;
-  std::cout<< "num_q_mag:        " << num_q_mag << std::endl;
+  // std::cout<< "TabulatedLabFrameHadronTensor: reading hadron tensor table" << std::endl;
+  // std::cout<< "table_file_name:  " << table_file_name << std::endl;
+  // std::cout<< "Z:                " << Z << std::endl;
+  // std::cout<< "A:                " << A << std::endl;
+  // std::cout<< "num_q0:           " << num_q0 << std::endl;
+  // std::cout<< "num_q_mag:        " << num_q_mag << std::endl;
 
   double W00, ReW0z, Wxx, ImWxy, Wzz;
   int lineCount=1;
@@ -494,6 +494,41 @@ double genie::TabulatedLabFrameHadronTensor::dSigma_dT_dCosTheta_rosenbluth(int 
     // k_final/El
     xsec= sig0*(VCC*RCC+2.*VCL*RCL+VLL*RLL+VT*RT+2.*VTP*RTP);
 
+    // std::cout << " probe_pdg " << " E_probe " << " m_probe " << " Tl " << " cos_l " << " ml " << " Q_value " << std::endl;
+    // std::cout << probe_pdg << "  " << E_probe << "  " << m_probe << "  " << Tl << "  " << cos_l << "  " << "  " << ml << "  " << Q_value << std::endl;
+    // std::cout << "Global factor = " << sig0 << std::endl;
+    // std::cout << "GF2 = " << genie::constants::kGF2 << std::endl;
+    // std::cout << "Vud2 = " << Vud2 << std::endl;
+    // std::cout << "v0 = " << v0 << std::endl;
+    // std::cout << "k_final = " << k_final << std::endl;
+    // std::cout << "4. * genie::constants::kPi = " << 4. * genie::constants::kPi << std::endl;
+    // std::cout << "E_probe = " << E_probe << std::endl;
+
+    // std::cout << "E_probe = " << E_probe << std::endl;
+    // std::cout << "v0 = " << v0 << std::endl;
+    // std::cout << "k_final = " << k_final << std::endl;
+    // std::cout << "sig0*1E38/units::cm2 = " << sig0 * 1E38 / genie::units::cm2 << std::endl;
+
+    //lepton tensor terms
+    // std::cout <<  "vcc " << " vcl " << " vll " << " vt " << " vtp " << std::endl;
+    // std::cout << VCC << "  " << VCL << "  " << VLL << "  " << VT << "  " << VTP << std::endl;
+    // std::cout << "\n" <<std::endl;
+
+    // tensor contraction terms
+    // std::cout << "VCC*RCC = " << VCC*RCC << std::endl;
+    // std::cout << "2.*VCL*RCL = " << 2.*VCL*RCL << std::endl;
+    // std::cout << "VLL*RLL " << VLL*RLL << std::endl;
+    // std::cout << "VT*RT " << VT*RT << std::endl;
+    // std::cout << "2.*VTP*RTP " << 2.*VTP*RTP << std::endl;
+    //std::cout << "\n" << std::endl;
+
+    //Hasron tensor values
+    // std::cout <<  "RCC " << " RCL " << " RLL " << " RT " << " RTP " << std::endl;
+    // std::cout << RCC << "  " << RCL << "  " << RLL << "  " << RT << "  " << RTP << std::endl;
+    // std::cout << "\n" <<std::endl;
+
+
+
 
     // This should never happen using the full SuSAv2-MEC hadron tensors
     // but can trigger when using the tensors from the parameterisation
@@ -502,5 +537,13 @@ double genie::TabulatedLabFrameHadronTensor::dSigma_dT_dCosTheta_rosenbluth(int 
     }
   }
 
+
   return xsec;
+
+
+
+
+
+
+
 }

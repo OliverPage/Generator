@@ -52,6 +52,21 @@ namespace {
       return genie::kHT_MEC_FullAll_wImag;
     else if (str == "QE_Full")
       return genie::kHT_QE_Full;
+
+    else if (str == "QE_CRPA_Low")
+      return genie::kHT_QE_CRPA_Low;
+    else if (str == "QE_CRPA_Medium")
+      return genie::kHT_QE_CRPA_Medium;
+    else if (str == "QE_CRPA_High")
+      return genie::kHT_QE_CRPA_High;
+
+    else if (str == "QE_CRPA_antiMuNu_Low")
+      return genie::kHT_QE_CRPA_antiMuNu_Low;
+    else if (str == "QE_CRPA_antiMuNu_Medium")
+      return genie::kHT_QE_CRPA_antiMuNu_Medium;
+    else if (str == "QE_CRPA_antiMuNu_High")
+      return genie::kHT_QE_CRPA_antiMuNu_High;
+
     else {
       ok = false;
       return genie::kHT_Undefined;
@@ -71,6 +86,15 @@ namespace {
     else if ( htt == genie::kHT_MEC_FullAll_Param ) return "MEC_FullAll_Param";
     else if ( htt == genie::kHT_MEC_FullAll_wImag ) return "MEC_FullAll_wImag";
     else if ( htt == genie::kHT_QE_Full ) return "QE_Full";
+
+    else if ( htt == genie::kHT_QE_CRPA_Low ) return "QE_CRPA_Low";
+    else if ( htt == genie::kHT_QE_CRPA_Medium ) return "QE_CRPA_Medium";
+    else if ( htt == genie::kHT_QE_CRPA_High ) return "QE_CRPA_High";  
+
+    else if ( htt == genie::kHT_QE_CRPA_antiMuNu_Low ) return "QE_CRPA_antiMuNu_Low";
+    else if ( htt == genie::kHT_QE_CRPA_antiMuNu_Medium ) return "QE_CRPA_antiMuNu_Medium";
+    else if ( htt == genie::kHT_QE_CRPA_antiMuNu_High ) return "QE_CRPA_antiMuNu_High";  
+
     else return "Undefined";
   }
 
@@ -229,7 +253,8 @@ const genie::HadronTensorI* genie::TabulatedHadronTensorModelI::BuildTensor(
       LOG("TabulatedHadronTensorModelI", pERROR) << "The hadron tensor data file \""
         << full_file_name << "\" requested for target pdg = "
         << tensor_id.target_pdg << " and hadron tensor type "
-        << tensor_id.type << " could not be found.";
+        << tensor_id.type << " could not be found."
+        << " tensor file base name is" << tensor_file_basename;
     }
   }
 

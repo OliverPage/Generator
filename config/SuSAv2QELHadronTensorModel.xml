@@ -18,7 +18,7 @@ DataPathType       string   Yes        Whether the specified path is    relative
 
   <param_set name="Default">
 
-    <param type="bool" name="WarnIfMissing"> false </param>
+    <param type="bool" name="WarnIfMissing"> true </param>
 
     <param type="string" name="DataPath"> data/evgen/hadron_tensors/susav2 </param>
     <param type="string" name="DataPathType"> relative </param>
@@ -30,6 +30,26 @@ DataPathType       string   Yes        Whether the specified path is    relative
 
     <param type="string" name="QE_Full@Pdg=1000060120"> SuSAv2_1000060120_QE_Full.dat </param>
     <param type="string" name="QE_EM@Pdg=1000060120"> SuSAv2_1000060120_QE_EM.dat </param>
+
+    <param type="string" name="QE_CRPA_Low@Pdg=1000060120"> SuSAv2_1000060120_QE_CRPA_Low.dat </param>
+    <param type="string" name="QE_CRPA_Medium@Pdg=1000060120"> SuSAv2_1000060120_QE_CRPA_Medium.dat </param>
+    <param type="string" name="QE_CRPA_High@Pdg=1000060120"> SuSAv2_1000060120_QE_CRPA_High.dat </param>
+
+    <param type="string" name="QE_CRPA_Low@Pdg=1000080160"> SuSAv2_1000080160_QE_CRPA_Low.dat </param>
+    <param type="string" name="QE_CRPA_Medium@Pdg=1000080160"> SuSAv2_1000080160_QE_CRPA_Medium.dat </param>
+    <param type="string" name="QE_CRPA_High@Pdg=1000080160"> SuSAv2_1000080160_QE_CRPA_High.dat </param>
+
+    <param type="string" name="QE_CRPA_Low@Pdg=1000180400"> SuSAv2_1000180400_QE_CRPA_Low.dat </param>
+    <param type="string" name="QE_CRPA_Medium@Pdg=1000180400"> SuSAv2_1000180400_QE_CRPA_Medium.dat </param>
+    <param type="string" name="QE_CRPA_High@Pdg=1000180400"> SuSAv2_1000180400_QE_CRPA_High.dat </param>
+
+    <param type="string" name="QE_CRPA_antiMuNu_Low@Pdg=1000060120"> SuSAv2_1000060120_QE_CRPA_antiNuMu_Low.dat </param>
+    <param type="string" name="QE_CRPA_antiMuNu_Medium@Pdg=1000060120"> SuSAv2_1000060120_QE_CRPA_antiNuMu_Medium.dat </param>
+    <param type="string" name="QE_CRPA_antiMuNu_High@Pdg=1000060120"> SuSAv2_1000060120_QE_CRPA_antiNuMu_High.dat </param>
+
+    <param type="string" name="QE_HF_Low@Pdg=1000060120"> HartreeFock_1000060120_QE_HF_Low.dat </param>
+    <param type="string" name="QE_HF_Medium@Pdg=1000060120"> HartreeFock_1000060120_QE_HF_Medium.dat </param>
+    <param type="string" name="QE_HF_High@Pdg=1000060120"> HartreeFock_1000060120_QE_HF_High.dat </param>
 
   </param_set>
 
